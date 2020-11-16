@@ -5,6 +5,15 @@ const threshold = 100;
 let previous_frame = [];
 
 console.log(Tone)
+
+const synth = new Tone.MonoSynth().toDestination()
+
+const playSynth = () => {
+    //fr 100 440
+    const fr = Math.floor(Math.random() * 340) + 100
+    synth.triggerAttackRelease(fr, "8n")
+}
+
 const draw = (vid) => {
     ctx.drawImage(vid, 0, 0, w, h)
     const data = ctx.getImageData(0, 0, w, h).data;
@@ -25,6 +34,7 @@ const draw = (vid) => {
                 ctx.fillRect(x, y, sample_size, sample_size);
                 previous_frame[pos] = r;
                 console.log('movement')
+                playSynth()
 
             } else {
                 ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
@@ -34,7 +44,6 @@ const draw = (vid) => {
         }
     }
 }
-
 var video = document.querySelector('video')
 const options = {
     video: { width: 1280, height: 720 }
@@ -42,7 +51,7 @@ const options = {
 navigator.mediaDevices.getUserMedia(options)
     .then(function (stream) {
         video.srcObject = stream
-        setInterval(() => draw(video), 100)
+        setInterval(() => draw(video), 10)
     })
     .catch((error) => {
         console.log("An error occured")
