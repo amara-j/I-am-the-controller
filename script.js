@@ -4,6 +4,7 @@ const sample_size = 15
 const threshold = 100;
 let previous_frame = [];
 
+console.log(Tone)
 const draw = (vid) => {
     ctx.drawImage(vid, 0, 0, w, h)
     const data = ctx.getImageData(0, 0, w, h).data;
