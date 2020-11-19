@@ -13,9 +13,13 @@ const onresize = e => {
 }
 window.addEventListener("resize", onresize)
 
-const reverb = new Tone.Reverb().toDestination()
-const volume = new Tone.Volume(-12).connect(reverb)
-const synth = new Tone.MonoSynth({ oscillator: { type: "sine1" } }).connect(
+//synth plays major scale notes instead of random fr
+const midiNotes = [40, 42, 44, 45, 47, 49, 51, 52]
+const notes = midiNotes.map(midinote => Tone.Frequency(midinote, "midi"))
+
+// const reverb = new Tone.Reverb().toDestination()
+const volume = new Tone.Volume(-12).toDestination()
+const synth = new Tone.MonoSynth({ oscillator: { type: "sine8" } }).connect(
 	volume
 )
 
@@ -24,7 +28,7 @@ const playSynth = () => {
 	if (isPlaying) return
 	isPlaying = true
 	//fr 100 440
-	const fr = Math.floor(Math.random() * 340) + 100
+	const fr = notes[Math.floor(Math.random() * notes.length)]
 
 	synth.triggerAttackRelease(fr, 0.2)
 
