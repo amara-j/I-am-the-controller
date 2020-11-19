@@ -35,16 +35,17 @@ const onresize = e => {
 //window.addEventListener("resize", onresize);
 
 const volume = new Tone.Volume(-12).toDestination()
-const synth = new Tone.PluckSynth().connect(volume)
 
 const playSynth = () => {
 	//fr 100 440
 	const fr = Math.floor(Math.random() * 340) + 100
 	synth.triggerAttackRelease(fr, 0.5)
+	const synth = new Tone.PluckSynth().connect(volume)
+
 	// setTimeout(() => synth.dispose(), 500)
 }
 
-const sample_size = 1
+const sample_size = 5
 const threshold = 90
 let previous_frame = []
 
@@ -53,13 +54,14 @@ let previous_frame = []
 // separate draw and update functions
 const offscreenCanvas = document.createElement("canvas")
 const offscreenCtx = offscreenCanvas.getContext("2d")
+offscreenCtx.imageSmoothingEnabled = false
 
 const small_canvas = document.querySelector("#small_canvas")
 const ctx = small_canvas.getContext("2d")
+ctx.imageSmoothingEnabled = false
 
 const renderOffscreenToActive = () => {
 	createImageBitmap(offscreenCanvas).then(bitmap => {
-		// console.log(bitmap)
 		ctx.drawImage(bitmap, 0, 0)
 	})
 }
@@ -70,7 +72,7 @@ const draw = vid => {
 	// for rows and columns in pixel array:
 	for (let y = 0; y < h; y += sample_size) {
 		for (let x = 0; x < w; x += sample_size) {
-			// the data arra= is a continuous array of red, blue, green and alpha values, so each pixel takes up four values in the array
+			// the data array is a continuous array of red, blue, green and alpha values, so each pixel takes up four values in the array
 			let pos = (x + y * w) * 4
 
 			// get red, blue and green pixel value
@@ -93,7 +95,7 @@ const draw = vid => {
 				offscreenCtx.fillStyle = `rgb(${r}, ${g}, ${b})`
 				offscreenCtx.fillRect(x, y, sample_size, sample_size)
 				previous_frame[pos] = r
-				// playSynth()
+				console.log("movement")
 			} else {
 				offscreenCtx.fillStyle = `rgb(${r}, ${g}, ${b})`
 				offscreenCtx.fillRect(x, y, sample_size, sample_size)
@@ -120,3 +122,15 @@ navigator.mediaDevices
 	.catch(error => {
 		console.log(`The following error occured: ${error}`)
 	})
+
+//scale onscreen canvas
+//x is innerWidth, y is innerHeight
+//w is mini canvas width, h is mini canvas height
+
+let scaleX = x / w / 2
+let scaleY = y / h / 2
+
+let scaleToFit = Math.min(scaleX, scaleY)
+let scaleToCover = Math.max(scaleX, scaleY)
+small_canvas.style.transformOrigin = "0 0" //scale from top left
+small_canvas.style.transform = "scale(" + scaleToFit + ")"
