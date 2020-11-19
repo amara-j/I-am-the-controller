@@ -1,31 +1,39 @@
 <!DOCTYPE html>
 <html lang="english">
-	<head>
-		<meta charset="UTF-8" />
-		<title>webcam</title>
-		<style>
-			body {
-				background: black;
-			}
-			video {
-				display: none;
-			}
-			canvas {
-				transform-origin: "0 0";
-				transform: scale(4);
-			}
-		</style>
-	</head>
 
-	<body>
-		<canvas id="small_canvas" width="128" height="72"></canvas>
-		<video autoplay></video>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.68/Tone.js"></script>
-		<script
-			src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js"
-			integrity="sha512-90vH1Z83AJY9DmlWa8WkjkV79yfS2n2Oxhsi2dZbIv0nC4E6m5AbH8Nh156kkM7JePmqD6tcZsfad1ueoaovww=="
-			crossorigin="anonymous"
-		></script>
-		<script src="script.js"></script>
-	</body>
+<head>
+	<meta charset="UTF-8" />
+	<title>webcam</title>
+	<style>
+		body {
+			background: black;
+			margin: 0px;
+			padding: 0px
+			/* overflow: hidden; */
+		}
+
+		video {
+			display: none;
+			image-rendering: -webkit-pixelated;
+		}
+
+		canvas {
+			transform-origin: "0 0";
+			/* transform: scale(4); */
+			image-rendering: -webkit-pixelated;
+			image-rendering: -moz-pixelated;
+		}
+	</style>
+</head>
+
+<body>
+	<canvas id="small_canvas" width="128" height="72"></canvas>
+	<video autoplay></video>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.68/Tone.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js"
+		integrity="sha512-90vH1Z83AJY9DmlWa8WkjkV79yfS2n2Oxhsi2dZbIv0nC4E6m5AbH8Nh156kkM7JePmqD6tcZsfad1ueoaovww=="
+		crossorigin="anonymous"></script>
+	<script src="script.js"></script>
+</body>
+
 </html>
