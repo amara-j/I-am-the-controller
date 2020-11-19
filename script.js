@@ -7,32 +7,11 @@ let win = window,
 let w = document.getElementById("small_canvas").getAttribute("width")
 let h = document.getElementById("small_canvas").getAttribute("height")
 
-//make a tiny invisible canvas to later scale up for pixelating effect
-// const offscreen_postage_stamp = new OffscreenCanvas(128,72);
-// offscreen_postage_stamp.getContext('2d').rect(0,0,20,20);
-
-// const canvasContainer = document.querySelector("#canvas-container")
-// const postage_stamp = document.createElement("canvas")
-
-// postage_stamp.offscreenCanvas = document.createElement("canvas")
-// postage_stamp.offscreenCanvas.width = 128
-// postage_stamp.offscreenCanvas.height = 72
-// const ctx1 = postage_stamp.offscreenCanvas.getContext("2d")
-// ctx1.beginPath()
-// ctx1.rect(0, 0, 20, 20)
-// ctx1.stroke()
-// postage_stamp.getContext("2d").drawImage(postage_stamp.offscreenCanvas, 0, 0)
-
-// canvasContainer.appendChild(postage_stamp)
-// postage_stamp.width = 128
-// postage_stamp.height = 72
-// postage_stamp.getContext('2d').drawImage(offscreen_postage_stamp, 0,0);
-
 const onresize = e => {
 	w = e.target.outerWidth
 	h = e.target.outerHeight
 }
-//window.addEventListener("resize", onresize);
+window.addEventListener("resize", onresize)
 
 const reverb = new Tone.Reverb().toDestination()
 const volume = new Tone.Volume(-12).connect(reverb)
