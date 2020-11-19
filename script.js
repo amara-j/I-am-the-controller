@@ -28,7 +28,7 @@ let h = document.getElementById("small_canvas").getAttribute("height")
 // postage_stamp.height = 72
 // postage_stamp.getContext('2d').drawImage(offscreen_postage_stamp, 0,0);
 
-var onresize = function (e) {
+const onresize = e => {
 	w = e.target.outerWidth
 	h = e.target.outerHeight
 }
@@ -51,18 +51,22 @@ let previous_frame = []
 //creating an offscreen canvas
 //update function outside of loop
 // separate draw and update functions
-
 const offscreenCanvas = document.createElement("canvas")
 const offscreenCtx = offscreenCanvas.getContext("2d")
 
 const small_canvas = document.querySelector("#small_canvas")
 const ctx = small_canvas.getContext("2d")
 
-const mapOffscreenToActive = () => {}
+const renderOffscreenToActive = () => {
+	createImageBitmap(offscreenCanvas).then(bitmap => {
+		// console.log(bitmap)
+		ctx.drawImage(bitmap, 0, 0)
+	})
+}
 
 const draw = vid => {
-	ctx.drawImage(vid, 0, 0, w, h)
-	const data = ctx.getImageData(0, 0, w, h).data
+	offscreenCtx.drawImage(vid, 0, 0, w, h)
+	const data = offscreenCtx.getImageData(0, 0, w, h).data
 	// for rows and columns in pixel array:
 	for (let y = 0; y < h; y += sample_size) {
 		for (let x = 0; x < w; x += sample_size) {
@@ -74,7 +78,6 @@ const draw = vid => {
 			// copy imagedata
 			// modify new imagedata that isn't on canvas
 			// then draw that on canvas after update
-
 			let r = data[pos]
 			let g = data[pos + 1]
 			let b = data[pos + 2]
@@ -87,19 +90,18 @@ const draw = vid => {
 				r = Math.random() * 255
 				g = Math.random() * 255
 				b = Math.random() * 255
-				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`
-				ctx.fillRect(x, y, sample_size, sample_size)
+				offscreenCtx.fillStyle = `rgb(${r}, ${g}, ${b})`
+				offscreenCtx.fillRect(x, y, sample_size, sample_size)
 				previous_frame[pos] = r
-				// console.log('movement')
-				//if there's movement, only fire this event every 50ms
 				// playSynth()
 			} else {
-				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`
-				ctx.fillRect(x, y, sample_size, sample_size)
+				offscreenCtx.fillStyle = `rgb(${r}, ${g}, ${b})`
+				offscreenCtx.fillRect(x, y, sample_size, sample_size)
 				previous_frame[pos] = r
 			}
 		}
 	}
+	renderOffscreenToActive()
 	window.requestAnimationFrame(() => draw(vid))
 }
 
@@ -116,5 +118,5 @@ navigator.mediaDevices
 		window.requestAnimationFrame(() => draw(video))
 	})
 	.catch(error => {
-		console.log("An error occured")
+		console.log(`The following error occured: ${error}`)
 	})
