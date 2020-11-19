@@ -34,18 +34,27 @@ const onresize = e => {
 }
 //window.addEventListener("resize", onresize);
 
-const volume = new Tone.Volume(-12).toDestination()
+const reverb = new Tone.Reverb().toDestination()
+const volume = new Tone.Volume(-12).connect(reverb)
+const synth = new Tone.MonoSynth({ oscillator: { type: "sine1" } }).connect(
+	volume
+)
 
+let isPlaying = false
 const playSynth = () => {
+	if (isPlaying) return
+	isPlaying = true
 	//fr 100 440
 	const fr = Math.floor(Math.random() * 340) + 100
-	synth.triggerAttackRelease(fr, 0.5)
-	const synth = new Tone.PluckSynth().connect(volume)
 
-	// setTimeout(() => synth.dispose(), 500)
+	synth.triggerAttackRelease(fr, 0.2)
+
+	setTimeout(() => {
+		isPlaying = false
+	}, 200)
 }
 
-const sample_size = 5
+const sample_size = 2
 const threshold = 90
 let previous_frame = []
 
@@ -53,11 +62,11 @@ let previous_frame = []
 //update function outside of loop
 // separate draw and update functions
 const offscreenCanvas = document.createElement("canvas")
-const offscreenCtx = offscreenCanvas.getContext("2d")
+const offscreenCtx = offscreenCanvas.getContext("2d", { alpha: false })
 offscreenCtx.imageSmoothingEnabled = false
 
 const small_canvas = document.querySelector("#small_canvas")
-const ctx = small_canvas.getContext("2d")
+const ctx = small_canvas.getContext("2d", { alpha: false })
 ctx.imageSmoothingEnabled = false
 
 const renderOffscreenToActive = () => {
@@ -65,7 +74,6 @@ const renderOffscreenToActive = () => {
 		ctx.drawImage(bitmap, 0, 0)
 	})
 }
-
 const draw = vid => {
 	offscreenCtx.drawImage(vid, 0, 0, w, h)
 	const data = offscreenCtx.getImageData(0, 0, w, h).data
@@ -95,7 +103,7 @@ const draw = vid => {
 				offscreenCtx.fillStyle = `rgb(${r}, ${g}, ${b})`
 				offscreenCtx.fillRect(x, y, sample_size, sample_size)
 				previous_frame[pos] = r
-				console.log("movement")
+				playSynth()
 			} else {
 				offscreenCtx.fillStyle = `rgb(${r}, ${g}, ${b})`
 				offscreenCtx.fillRect(x, y, sample_size, sample_size)
