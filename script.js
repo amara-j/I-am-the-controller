@@ -1,3 +1,6 @@
+Tone.start()
+
+
 let win = window,
 	d = document,
 	e = d.documentElement,
@@ -145,7 +148,6 @@ navigator.mediaDevices
 	.then(function (stream) {
 		// Main function
 		video.srcObject = stream
-		Tone.start()
 		window.requestAnimationFrame(() => draw(video))
 	})
 	.catch(error => {
@@ -159,7 +161,10 @@ navigator.mediaDevices
 let scaleX = x / w
 let scaleY = y / h
 
-let scaleToFit = Math.min(scaleX, scaleY)
-let scaleToCover = Math.max(scaleX, scaleY)
+
+// let scaleToFit = Math.min(scaleX, scaleY)
+// let scaleToCover = Math.max(scaleX, scaleY)
 small_canvas.style.transformOrigin = "0 0" //scale from top left
-small_canvas.style.transform = `scale(${scaleToFit})`
+// small_canvas.style.transform = `scale(${scaleToFit})`
+
+small_canvas.style.transform = `translateX(${w*scaleX}px) scaleX(-${scaleX}) scaleY(${scaleY})` 
