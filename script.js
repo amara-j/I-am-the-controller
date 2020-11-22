@@ -99,17 +99,6 @@ const renderOffscreenToActive = () => {
 	ctx.drawImage(offscreenCanvas, 0, 0)
 }
 
-function componentToHex(c) {
-	var hex = c.toString(16);
-	return hex.length == 1 ? "0" + hex : hex;
-}
-
-function rgbToHex(r, g, b) {
-	hexVal = "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-	return hexVal;
-}
-
-
 const draw = vid => {
 	//debugger
 	offscreenCtx.drawImage(vid, 0, 0, w, h)
@@ -135,7 +124,7 @@ const draw = vid => {
 				g = Math.floor(Math.random() * 255)	
 				b = Math.floor(Math.random() * 255)
 
-				offscreenCtx.fillStyle = `${rgbToHex(r,b,g)}`
+				offscreenCtx.fillStyle = `rgb(${r},${g},${b})`;
 				// console.log(`${rgbToHex(r,g,b)}`)
 				// console.log(r,g,b)
 				offscreenCtx.fillRect(x, y, sample_size, sample_size)
@@ -146,7 +135,7 @@ const draw = vid => {
 			}
 			else {
 				//we shouldn't have to redraw these pixels
-				offscreenCtx.fillStyle = `${rgbToHex(r,g,b)}`;
+				offscreenCtx.fillStyle = `rgb(${r},${g},${b})`;
 				offscreenCtx.fillRect(x, y, sample_size, sample_size)
 				previous_frame[pos] = r
 			}
