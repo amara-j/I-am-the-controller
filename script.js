@@ -1,6 +1,5 @@
 Tone.start()
 
-
 let win = window,
 	d = document,
 	e = d.documentElement,
@@ -14,8 +13,6 @@ const onresize = e => {
 	w = e.target.outerWidth
 	h = e.target.outerHeight
 }
-// window.addEventListener("resize", onresize)
-//synth plays major scale notes instead of random fr
 const midiNotes = [40, 52]
 const notes = midiNotes.map(midinote => Tone.Frequency(midinote, "midi"))
 
@@ -63,10 +60,6 @@ const playSynth = (position) => {
 	}
 
 	isPlaying = true
-	//fr 100 440
-	// const fr = notes[Math.floor(Math.random() * notes.length)]
-	//monosynth.triggerAttackRelease(fr, 0.2)
-
 	setTimeout(() => {
 		isPlaying = false
 	}, 200)
@@ -75,14 +68,10 @@ const playSynth = (position) => {
 
 
 const sample_size = 2
-const threshold = 100
+const threshold = 40
 let previous_frame = []
 
 
-
-//creating an offscreen canvas
-//update function outside of loop
-// separate draw and update functions
 const offscreenCanvas = document.createElement("canvas")
 
 const offscreenCtx = offscreenCanvas.getContext("2d", { alpha: false })
@@ -100,13 +89,12 @@ const renderOffscreenToActive = () => {
 }
 
 const draw = vid => {
-	//debugger
 	offscreenCtx.drawImage(vid, 0, 0, w, h)
 	const data = offscreenCtx.getImageData(0, 0, w, h).data
 	// for rows and columns in pixel array:
 	for (let y = 0; y < h; y += sample_size) {
 		for (let x = 0; x < w; x += sample_size) {
-			// the data array is a continuous array of red, blue, green and alpha values, so each pixel takes up four values in the array
+			// the data array is a continuous array of rgba values, so each pixel takes up four values in the array
 			let pos = (x + y * w) * 4
 			// get red, blue and green pixel value
 			// copy imagedata
@@ -125,8 +113,6 @@ const draw = vid => {
 				b = Math.floor(Math.random() * 255)
 
 				offscreenCtx.fillStyle = `rgb(${r},${g},${b})`;
-				// console.log(`${rgbToHex(r,g,b)}`)
-				// console.log(r,g,b)
 				offscreenCtx.fillRect(x, y, sample_size, sample_size)
 				previous_frame[pos] = r
 
@@ -134,7 +120,6 @@ const draw = vid => {
 				playSynth({ x: x, y: y })
 			}
 			else {
-				//we shouldn't have to redraw these pixels
 				offscreenCtx.fillStyle = `rgb(${r},${g},${b})`;
 				offscreenCtx.fillRect(x, y, sample_size, sample_size)
 				previous_frame[pos] = r
@@ -167,10 +152,6 @@ navigator.mediaDevices
 let scaleX = x / w
 let scaleY = y / h
 
-
-// let scaleToFit = Math.min(scaleX, scaleY)
-// let scaleToCover = Math.max(scaleX, scaleY)
-small_canvas.style.transformOrigin = "0 0" //scale from top left
-// small_canvas.style.transform = `scale(${scaleToFit})`
+small_canvas.style.transformOrigin = "0 0" 
 
 small_canvas.style.transform = `translateX(${w * scaleX}px) scaleX(-${scaleX}) scaleY(${scaleY})` 
